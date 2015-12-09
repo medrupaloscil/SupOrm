@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="SupOrm">
+	<table name="users">
+		<column name="id" type="bigint"/>
+		<column name="pseudo" type="varchar" size="255"/>
+		<column name="password" type="varchar" size="255"/>
+		<column name="age" type="int"/>
+	</table>
+	<table name="messages">
+		<column name="id" type="bigint"/>
+		<column name="sender" type="varchar" size="255"/>
+		<column name="receiver" type="varchar" size="255"/>
+		<column name="content" type="varchar" size="255"/>
+	</table>
+</database>
