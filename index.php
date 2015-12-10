@@ -7,4 +7,7 @@ $database = new Create();
 $database->createDatabase();
 
 $user = new Users();
-//var_dump($user->findAll());
+$user->select(['pseudo', 'id']);
+$user->where(['id = 2', 'age = 19']);
+$user->orderBy('id', 'DESC');
+var_dump($user->find());

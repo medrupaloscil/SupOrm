@@ -7,6 +7,7 @@ class messages extends Entity {
    protected $content;
 
    function __construct() {
+      parent::__construct();
       parent::setName('messages');
    }
 

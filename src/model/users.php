@@ -8,6 +8,7 @@ class users extends Entity {
    protected $gender;
 
    function __construct() {
+      parent::__construct();
       parent::setName('users');
    }
 

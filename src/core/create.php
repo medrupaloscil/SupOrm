@@ -53,6 +53,7 @@ class Create {
 		}
 		$code .= "\n";
 		$code .= $this->do_tabs($tabs) . "function __construct() {\n";
+		$code .= $this->do_tabs($tabs) . $this->do_tabs($tabs) . "parent::__construct();\n";
 		$code .= $this->do_tabs($tabs) . $this->do_tabs($tabs) . "parent::setName('$className');\n";
 		$code .= $this->do_tabs($tabs) . "}\n\n";
 
@@ -76,4 +77,3 @@ class Create {
 		}
 	}
 }
-
