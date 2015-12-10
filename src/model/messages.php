@@ -1,18 +1,20 @@
 <?php
 
-class messages
-{
+class messages extends Entity {
    protected $id;
    protected $sender;
    protected $receiver;
    protected $content;
+
+   function __construct() {
+      parent::setName('messages');
+   }
 
    public function getId() {
       return $this->id;
    }
 
    public function setId($id) {
-   {
       $this->id = $id;
    }
 
@@ -21,7 +23,6 @@ class messages
    }
 
    public function setSender($sender) {
-   {
       $this->sender = $sender;
    }
 
@@ -30,7 +31,6 @@ class messages
    }
 
    public function setReceiver($receiver) {
-   {
       $this->receiver = $receiver;
    }
 
@@ -39,7 +39,6 @@ class messages
    }
 
    public function setContent($content) {
-   {
       $this->content = $content;
    }
 

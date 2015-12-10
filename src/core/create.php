@@ -22,39 +22,45 @@ class Create {
 		  		$fields = [];
 		  		foreach ($value as $ky => $val) {
 		  			array_push($fields, $val['name']);
-		  			//var_dump($val);
+		  			$this->addColumn($value['name'], $val['name'], $val['type']);
 		  		}
 		  		$this->generateFiles($className, $fields);
 		  	}
 		}
 	}
 
-	private function createTable($tableName) {
-		echo "gros tas ";
-		$sth = $this->pdo->prepare('CREATE TABLE IF NOT EXISTS :name (id INTEGER);');
-		$sth->execute([':name' => $tableName]);
+	private function isDatabaseOrCreate($databaseName) {
+		$sth = $this->pdo->prepare('CREATE DATABASE IF NOT EXISTS '.$databaseName.';');
+		$sth->execute();
 	}
 
-	private function isDatabaseOrCreate($databaseName) {
-		$sth = $this->pdo->prepare('CREATE DATABASE IF NOT EXISTS :name;');
-		$sth->execute([':name' => $databaseName]);
+	private function createTable($tableName) {
+		$sth = $this->pdo->prepare('CREATE TABLE IF NOT EXISTS '.$tableName.' (id INTEGER);');
+		$sth->execute();
+	}
+
+	private function addColumn($tableName, $columnName, $columnType) {
+		$sth = $this->pdo->prepare('ALTER TABLE '.$tableName.' ADD '.$columnName.' '.$columnType.';');
+		$sth->execute();
 	}
 
 	private function generateFiles($className, $fields) {
 		$tabs = 1;
 		$code = "<?php\n\n";
-		$code .= "class $className\n{\n";
+		$code .= "class $className extends Entity {\n";
 		foreach ($fields as $field) {
 			$code .= $this->do_tabs($tabs) . 'protected $'.$field.";\n";
 		}
 		$code .= "\n";
+		$code .= $this->do_tabs($tabs) . "function __construct() {\n";
+		$code .= $this->do_tabs($tabs) . $this->do_tabs($tabs) . "parent::setName('$className');\n";
+		$code .= $this->do_tabs($tabs) . "}\n\n";
 
 		foreach ($fields as $field) {
 			$code .= $this->do_tabs($tabs) . 'public function get'.ucfirst($field)."() {\n";
 			$code .= $this->do_tabs($tabs) . $this->do_tabs($tabs) . 'return $this->'.$field.";\n";
 			$code .= $this->do_tabs($tabs) . "}\n\n";
 			$code .= $this->do_tabs($tabs) . 'public function set'.ucfirst($field).'($'.$field.") {\n";
-			$code .= $this->do_tabs($tabs) . "{\n";
 			$code .= $this->do_tabs($tabs) . $this->do_tabs($tabs) . '$this->'.$field.' = $'.$field.";\n";
 			$code .= $this->do_tabs($tabs) . "}\n\n";
 		}

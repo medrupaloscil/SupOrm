@@ -1,18 +1,21 @@
 <?php
 
-class users
-{
+class users extends Entity {
    protected $id;
    protected $pseudo;
    protected $password;
    protected $age;
+   protected $gender;
+
+   function __construct() {
+      parent::setName('users');
+   }
 
    public function getId() {
       return $this->id;
    }
 
    public function setId($id) {
-   {
       $this->id = $id;
    }
 
@@ -21,7 +24,6 @@ class users
    }
 
    public function setPseudo($pseudo) {
-   {
       $this->pseudo = $pseudo;
    }
 
@@ -30,7 +32,6 @@ class users
    }
 
    public function setPassword($password) {
-   {
       $this->password = $password;
    }
 
@@ -39,8 +40,15 @@ class users
    }
 
    public function setAge($age) {
-   {
       $this->age = $age;
+   }
+
+   public function getGender() {
+      return $this->gender;
+   }
+
+   public function setGender($gender) {
+      $this->gender = $gender;
    }
 
 }
