@@ -1,0 +1,2 @@
+LOGS ERRORS: 
+[11/12/15 19:38:07] : You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SCT * FROM Users WHERE 1 ORDER BY id DESC' at line 1 

@@ -10,7 +10,7 @@ class Query {
 
 	function __construct() {
 		$data = json_decode(file_get_contents(__DIR__."/../../app/config/parameters.json"));
-		$this->pdo = new PDO(
+		$this->pdo = new MedruPDO (
     		'mysql:host='.$data->database_host.';dbname='.$data->database_name,
    			$data->database_user,
     		$data->database_pass
@@ -44,8 +44,7 @@ class Query {
 	}
 
 	public function find($name) {
-		$sth = $this->pdo->prepare("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting;");
-		$sth->execute();
+		$sth = $this->pdo->prepareQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting;");
 		$result = [];
 		foreach ($sth->fetchAll() as $key => $value) {
 		 	array_push($result, $this->createEntity($name, $value));
@@ -57,8 +56,7 @@ class Query {
 	}
 
 	public function findAll($name) {
-		$sth = $this->pdo->prepare("SELECT * FROM $name;");
-		$sth->execute();
+		$sth = $this->pdo->prepareQuery("SELECT * FROM $name;");
 		$result = [];
 		foreach ($sth->fetchAll() as $key => $value) {
 		 	array_push($result, $this->createEntity($name, $value));
@@ -67,8 +65,7 @@ class Query {
 	}
 
 	public function findOne($name) {
-		$sth = $this->pdo->prepare("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting LIMIT 1;");
-		$sth->execute();
+		$sth = $this->pdo->prepareQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting LIMIT 1;");
 		$result = $this->createEntity($name, $sth->fetchAll()[0]);
 		$this->sorting = "id ASC";
 		$this->where = "1";
@@ -93,8 +90,7 @@ class Query {
 		$set = "";
 		$id = $object->getId();
 		if ($id == null) {
-			$sth = $this->pdo->prepare("INSERT INTO $table (id) VALUES (DEFAULT);");
-			$sth->execute();
+			$sth = $this->pdo->prepareQuery("INSERT INTO $table (id) VALUES (DEFAULT);");
 			$id = $this->pdo->lastInsertId();
 		}
 		$set = "";
@@ -107,15 +103,13 @@ class Query {
 				$i++;
 			}
 		}
-		$sth = $this->pdo->prepare("UPDATE $table SET $set WHERE id = '$id';");
-		$sth->execute();
+		$sth = $this->pdo->prepareQuery("UPDATE $table SET $set WHERE id = '$id';");
 	}
 
 	public function delete($object) {
 		$id = $object->getId();
 		$table = strtolower(get_class($object));
-		$sth = $this->pdo->prepare("DELETE FROM $table WHERE id = $id");
-		$sth->execute();
+		$sth = $this->pdo->prepareQuery("DELETE FROM $table WHERE id = $id");
 	}
 
 }
