@@ -1,13 +1,12 @@
 <?php
-require_once('src/core/create.php');
-require_once('src/core/entity.php');
-require_once('src/model/users.php');
+require_once('autoloader.php');
 
 $database = new Create();
 $database->createDatabase();
 
-$user = new Users();
-$user->select(['pseudo', 'id']);
-$user->where(['id = 2', 'age = 19']);
-$user->orderBy('id', 'DESC');
-var_dump($user->find());
+$query = new Query();
+$query->orderBy('id', 'DESC');
+$user = $query->findOne('Users');
+$user->setAge(19);
+$user->save();
+var_dump($user);

@@ -1,6 +1,6 @@
 <?php
 
-class users extends Entity {
+class Users extends Entity {
    protected $id;
    protected $pseudo;
    protected $password;
@@ -9,7 +9,6 @@ class users extends Entity {
 
    function __construct() {
       parent::__construct();
-      parent::setName('users');
    }
 
    public function getId() {

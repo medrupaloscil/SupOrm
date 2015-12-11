@@ -1,6 +1,6 @@
 <?php
 
-class messages extends Entity {
+class Messages extends Entity {
    protected $id;
    protected $sender;
    protected $receiver;
@@ -8,7 +8,6 @@ class messages extends Entity {
 
    function __construct() {
       parent::__construct();
-      parent::setName('messages');
    }
 
    public function getId() {
