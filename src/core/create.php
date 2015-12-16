@@ -17,12 +17,12 @@ class Create {
 		  	$xml = simplexml_load_file($file) or die("Error: Cannot create object");
 		  	$this->isDatabaseOrCreate($xml['name']);
 		  	foreach ($xml as $key => $value) {
-		  		$this->createTable($value['name']);
-		  		$className = $value['name'];
+		  		$this->createTable(ucfirst($value['name']);
+		  		$className = ucfirst($value['name'];
 		  		$fields = [];
 		  		foreach ($value as $ky => $val) {
 		  			array_push($fields, $val['name']);
-		  			$this->addColumn($value['name'], $val['name'], $val['type']);
+		  			$this->addColumn(ucfirst($value['name'], $val['name'], $val['type']);
 		  		}
 		  		$this->generateFiles($className, $fields);
 		  	}
