@@ -2,7 +2,7 @@
 
 class MedruPDO extends PDO {
 
-	public function prepareQuery($statement) {
+	public function prepareAndExecuteQuery($statement) {
 		$sth = $this->prepare($statement);
 		if ($sth->errorInfo()[2] != null) $this->logError($sth);
 		$sth->execute();

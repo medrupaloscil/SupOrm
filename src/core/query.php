@@ -6,7 +6,7 @@ class Query {
 	private $select = "*";
 	private $sorting = "id ASC";
 	private $where = "1";
-	private $limit = "0";
+	private $limit = "";
 
 	function __construct() {
 		$data = json_decode(file_get_contents(__DIR__."/../../app/config/parameters.json"));
@@ -39,12 +39,16 @@ class Query {
 		if ($this->where == "") $this->where = "1";
 	}
 
+	public function limit($limit, $offset = 0) {
+		$this->limit = "LIMIT $offset, $limit";
+	}
+
 	public function orderBy($param, $type = 'ASC') {
 		$this->sorting = "$param $type";
 	}
 
 	public function find($name) {
-		$sth = $this->pdo->prepareQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting;");
+		$sth = $this->pdo->prepareAndExecuteQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting $this->limit;");
 		$result = [];
 		foreach ($sth->fetchAll() as $key => $value) {
 		 	array_push($result, $this->createEntity($name, $value));
@@ -52,25 +56,49 @@ class Query {
 		$this->sorting = "id ASC";
 		$this->where = "1";
 		$this->select = "*";
+		$this->limit = "";
 		return $result;
 	}
 
 	public function findAll($name) {
-		$sth = $this->pdo->prepareQuery("SELECT * FROM $name;");
+		$sth = $this->pdo->prepareAndExecuteQuery("SELECT * FROM $name;");
 		$result = [];
 		foreach ($sth->fetchAll() as $key => $value) {
 		 	array_push($result, $this->createEntity($name, $value));
 		}
+		$this->sorting = "id ASC";
+		$this->where = "1";
+		$this->select = "*";
+		$this->limit = "";
 		return $result;
 	}
 
 	public function findOne($name) {
-		$sth = $this->pdo->prepareQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting LIMIT 1;");
+		$sth = $this->pdo->prepareAndExecuteQuery("SELECT $this->select FROM $name WHERE $this->where ORDER BY $this->sorting LIMIT 1;");
 		$result = $this->createEntity($name, $sth->fetchAll()[0]);
 		$this->sorting = "id ASC";
 		$this->where = "1";
 		$this->select = "*";
+		$this->limit = "";
 		return $result;
+	}
+
+	public function count($name) {
+		$result = $this->find($name);
+		$this->sorting = "id ASC";
+		$this->where = "1";
+		$this->select = "*";
+		$this->limit = "";
+		return count($result);
+	}
+
+	public function isEntity($name) {
+		$result = $this->find($name);
+		$this->sorting = "id ASC";
+		$this->where = "1";
+		$this->select = "*";
+		$this->limit = "";
+		return count($result) > 0;
 	}
 
 	public function createEntity($name, $datas) {
@@ -90,7 +118,7 @@ class Query {
 		$set = "";
 		$id = $object->getId();
 		if ($id == null) {
-			$sth = $this->pdo->prepareQuery("INSERT INTO $table (id) VALUES (DEFAULT);");
+			$sth = $this->pdo->prepareAndExecuteQuery("INSERT INTO $table (id) VALUES (DEFAULT);");
 			$id = $this->pdo->lastInsertId();
 		}
 		$set = "";
@@ -103,13 +131,13 @@ class Query {
 				$i++;
 			}
 		}
-		$sth = $this->pdo->prepareQuery("UPDATE $table SET $set WHERE id = '$id';");
+		$sth = $this->pdo->prepareAndExecuteQuery("UPDATE $table SET $set WHERE id = '$id';");
 	}
 
 	public function delete($object) {
 		$id = $object->getId();
 		$table = strtolower(get_class($object));
-		$sth = $this->pdo->prepareQuery("DELETE FROM $table WHERE id = $id");
+		$sth = $this->pdo->prepareAndExecuteQuery("DELETE FROM $table WHERE id = $id");
 	}
 
 }
